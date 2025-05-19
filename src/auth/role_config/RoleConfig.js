@@ -1,0 +1,7 @@
+const USER_ROLES = {
+    GUEST: "ROLE_GUEST",
+    ADMIN: "ROLE_ADMIN",
+    PASSENGER: "ROLE_PASSENGER",
+}
+
+export default USER_ROLES
