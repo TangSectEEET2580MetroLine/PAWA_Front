@@ -1,34 +1,14 @@
-export default async function sendHttpRequest(url, method = 'GET', body = null) {
-    console.log('Request URL:', url); // Debugging log
+// src/http_call/HttpRequest.js
+import axios from "axios";
+import {HOST_URL_LOGIN, HOST_URL_REGISTER } from "../service_url/AppUrlConfig";
 
-    let fetchOptions = {
-        method: method,
-        headers: {},
-        credentials: 'include' // <-- Ensure cookies are sent and received
-    };
+axios.defaults.withCredentials = true;
 
-    if (body && (method === 'POST' || method === 'PUT')) {
-        fetchOptions.body = JSON.stringify(body);
-        fetchOptions.headers["Content-Type"] = "application/json";
-    }
 
-    let response = await fetch(url, fetchOptions);
-
-    console.log('Raw Response:', response); // Debugging log
-
-    let jsonData = "";
-    try {
-        jsonData = await response.json();
-        console.log('Parsed JSON:', jsonData); // Debugging log
-    } catch (error) {
-        console.error('Error parsing JSON:', error);
-        jsonData = {}; // Default to an empty object
-    }
-
-    return {
-        json: jsonData,
-        status: response.status,
-        responseHeader: response.headers
-    };
+export function loginRequest(email, password) {
+  return axios.post(HOST_URL_LOGIN, { email, password });
 }
 
+/*export function googleSignInRequest() {
+  return axios.get(HOST_URL_GG_LOGIN);
+}*/
