@@ -5,4 +5,7 @@ export const HOST_URL_LOGIN    = `${API_BASE_URL}/api/auth/login`;
 //export const HOST_URL_GG_LOGIN = `${API_BASE_URL}/login/oauth2/code/google`;
 export const HOST_URL_GG_LOGIN = `${API_BASE_URL}/oauth2/authorization/google`;
 export const HOST_URL_REGISTER = `${API_BASE_URL}/api/auth/register`;
+export const HOST_URL_TICKETS         = `${API_BASE_URL}/api/tickets`;
+export const HOST_URL_WALLET    = `${API_BASE_URL}/api/wallets`;
+  
 

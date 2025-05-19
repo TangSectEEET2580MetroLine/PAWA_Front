@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginRequest, googleSignInRequest } from '../../http_call/HttpRequest';
+import { loginRequest } from '../../http_call/HttpRequest';
 import { HOST_URL_GG_LOGIN } from '../../service_url/AppUrlConfig'; 
 import './login.css';
 import { ReactComponent as GoogleIcon } from './assets/google-icon.svg'; 
+import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
   const [email, setEmail]       = useState('');
@@ -19,29 +20,36 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await loginRequest(email, password);
-      const { token } = response.data;
+      // 1) Authenticate and receive a JWT
+      const { data } = await loginRequest(email, password);
+      const { token } = data;
+      if (!token) throw new Error('No token returned');
 
-      // save JWT Token if login success
-      if (token) {
-        localStorage.setItem('authToken', token);
+      // 2) Store the JWT
+      localStorage.setItem('authToken', token);
+
+      // 3) Decode it to read your custom "userId" claim
+      //    (your backend does: claims.put("userId", userId) when generating the token)
+      const payload = jwtDecode(token);
+      const userId = payload.userId;
+      if (userId) {
+        localStorage.setItem('userId', userId);
       }
 
-      // after Login, go to main page
+      // 4) Redirect to the dashboard
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      if (err.response?.status === 400) {
+      if (err.response?.status === 400 || err.response?.status === 401) {
         setError('Invalid Email or Password.');
       } else {
-        setError('Errors, please try again');
+        setError('Error logging in, please try again.');
       }
     }
   };
 
-    const handleGoogle = () => {
-        // full-page redirect to Spring's authorization endpoint
-        window.location.href = HOST_URL_GG_LOGIN;
+  const handleGoogle = () => {
+    window.location.href = HOST_URL_GG_LOGIN;
   };
 
   return (
@@ -53,6 +61,7 @@ const Login = () => {
           <span className="logo-text">HCMC Metro</span>
         </div>
 
+        {/* Title */}
         <h2 className="login-title">Log In</h2>
 
         {/* Form */}
@@ -102,7 +111,7 @@ const Login = () => {
           <span>Continue with Google</span>
         </button>
 
-        {/* Sign up link */}
+        {/* Sign up */}
         <div className="login-signup">
           Don’t have an account? <Link to="/signup">Sign up</Link>
         </div>

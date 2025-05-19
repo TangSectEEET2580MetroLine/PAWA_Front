@@ -6,6 +6,7 @@ import Login            from '../../component/loginpage/Login';
 import Registration     from '../../component/Registration/Registration';
 import Dashboard        from '../../component/DashBoard/Dashboard';
 import TicketDetail from '../../component/TicketDetail/TicketDetail';
+import OAuth2Success from '../../component/OAuth2Success';
 //import AvailableLines   from '../../component/AvailableLines/AvailableLines';
 //import PurchaseTicket   from '../../component/PurchaseTicket/PurchaseTicket';
 //import History          from '../../component/History/History';
@@ -20,6 +21,7 @@ const RouteConfig = () => (
     {/* Public */}
     <Route path="/login"  element={<Login />} />
     <Route path="/signup" element={<Registration />} />
+    <Route path="/oauth2-success" element={<OAuth2Success />} />
 
     {/*Dashboard page*/}
     <Route path="/dashboard" element={<Dashboard />} />

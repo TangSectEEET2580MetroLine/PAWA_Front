@@ -1,41 +1,52 @@
+// src/component/TicketDetail/TicketDetail.jsx
+
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate }       from 'react-router-dom';
+import { getTicketById }                from '../../http_call/HttpRequest';
 import './TicketDetail.css';
 
 const TicketDetail = () => {
-  const { id } = useParams();
-  const [ticket, setTicket] = useState(null);
-  const navigate = useNavigate();
+  const { id }        = useParams();
+  const navigate      = useNavigate();
+  const [ticket, setTicket]     = useState(null);
+  const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState(null);
 
   useEffect(() => {
-    // TODO: fetch từ API backend: GET /api/tickets/{id}
-    // Hiện tại giả lập dữ liệu:
-    const data = {
-      id,
-      departureStation: 'Ben Thanh Station',
-      arrivalStation:   'An Phu Station',
-      numberOfStations: 6,
-      price:            '₫12.000',
-      status:           'INACTIVE',
-      issueDate:        '2025-05-19',
-      expiryDate:       '2025-05-20'
-    };
-    setTicket(data);
+    setLoading(true);
+    setError(null);
+
+    getTicketById(id)
+      .then(res => {
+        setTicket(res.data);
+      })
+      .catch(err => {
+        console.error('Fetch ticket failed', err);
+        setError('Cant load information.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [id]);
 
-  if (!ticket) {
-    return <div className="loading">Loading...</div>;
+  if (loading) {
+    return <div className="loading">Loading ticket details…</div>;
+  }
+  if (error) {
+    return <div className="loading">{error}</div>;
   }
 
   return (
     <div className="ticket-detail-container">
-        <button 
+      {/* Back button */}
+      <button 
         className="back-button" 
         onClick={() => navigate(-1)} 
         aria-label="Go back"
       >
         ← Back
       </button>
+
       <h2 className="detail-title">Ticket Details</h2>
       <div className="detail-card">
         <div className="detail-row">

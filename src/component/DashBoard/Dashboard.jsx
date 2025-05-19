@@ -1,46 +1,94 @@
 // src/component/DashBoard/Dashboard.jsx
 
-import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useNavigate }      from 'react-router-dom';
+import { getAllTickets, getWallet }  from '../../http_call/HttpRequest';
+import { jwtDecode }                 from 'jwt-decode';
 import './Dashboard.css';
-import trainImage from './assets/train.jpg';
+import trainImage                    from './assets/train.jpg';
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // Tạm thời giả lập dữ liệu
-  const ticketCount    = 5;
-  const walletBalance  = '₫50,000';
-  const tickets = [
-    { id: 0, date: '02/10/2025', type: 'Ben Thanh → Sai Gon Zoo' },
-    { id: 1, date: '02/10/2025', type: 'Ben Si-anh → Tan Phu Station' },
-    { id: 2, date: '02/10/2025', type: 'Ben Thanh → Sai Gon Terminal' },
-    { id: 3, date: '01/26/2025', type: 'Binh Thai → Independence Palace' },
-    { id: 4, date: '01/26/2025', type: '01/26/2025 → Cho Lai Station' },
-  ];
+  // Tickets state
+  const [tickets, setTickets]               = useState([]);
+  const [loadingTickets, setLoadingTickets] = useState(true);
+
+  // Wallet state
+  const [walletBalance, setWalletBalance]   = useState('—');
+  const [loadingWallet, setLoadingWallet]   = useState(true);
+
+  // 1) Load tickets from backend
+  useEffect(() => {
+    getAllTickets()
+      .then(res => {
+        const mapped = res.data.map(t => ({
+          id:   t.id,
+          date: new Date(t.issueDate).toLocaleTimeString() + ' ' +
+                new Date(t.issueDate).toLocaleDateString(),
+          type: `${t.departureStation} → ${t.arrivalStation}`
+        }));
+        setTickets(mapped);
+      })
+      .catch(err => console.error('Failed to load tickets', err))
+      .finally(() => setLoadingTickets(false));
+  }, []);
+
+  useEffect(() => {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    console.warn('No authToken in localStorage');
+    setLoadingWallet(false);
+    return;
+  }
+
+  let payload;
+  try {
+    payload = jwtDecode(token);
+    console.log('Decoded JWT payload:', payload);
+  } catch (err) {
+    console.error('Failed to decode JWT', err);
+    setLoadingWallet(false);
+    return;
+  }
+
+  // Try every possible claim name:
+  const userId = payload.userId || payload.sub || payload.id || payload.user?.id;
+  console.log('Dashboard will fetch wallet for userId=', userId);
+
+  if (!userId) {
+    console.warn('No userId claim found in token');
+    setLoadingWallet(false);
+    return;
+  }
+
+  getWallet(userId)
+    .then(res => {
+      console.log('Wallet API response:', res);
+      const { balance } = res.data;
+      setWalletBalance(`₫${balance.toLocaleString()}`);
+    })
+    .catch(err => {
+      console.error('Failed to load wallet', err);
+      setWalletBalance('—');
+    })
+    .finally(() => setLoadingWallet(false));
+}, []);
+
+  const ticketCount = tickets.length;
 
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
         <div className="sidebar-logo">HCMC Metro</div>
         <nav className="sidebar-nav">
-          <NavLink to="/dashboard" className="nav-item" activeclassname="active">
-            Dashboard
-          </NavLink>
-          <NavLink to="/lines" className="nav-item">
-            Available Lines
-          </NavLink>
-          <NavLink to="/purchase" className="nav-item">
-            Purchase Ticket
-          </NavLink>
-          <NavLink to="/history" className="nav-item">
-            History
-          </NavLink>
+          <NavLink to="/dashboard" className="nav-item">Dashboard</NavLink>
+          <NavLink to="/lines"     className="nav-item">Available Lines</NavLink>
+          <NavLink to="/purchase"  className="nav-item">Purchase Ticket</NavLink>
+          <NavLink to="/history"   className="nav-item">History</NavLink>
         </nav>
         <div className="sidebar-footer">
-          <NavLink to="/settings" className="nav-item">
-            Settings
-          </NavLink>
+          <NavLink to="/settings" className="nav-item">Settings</NavLink>
         </div>
       </aside>
 
@@ -59,47 +107,47 @@ const Dashboard = () => {
         <section className="cards">
           <div className="card">
             <h3>Total Tickets</h3>
-            <p>{ticketCount}</p>
+            <p>{loadingTickets ? '…' : ticketCount}</p>
           </div>
           <div className="card">
             <h3>e-Wallet Balance</h3>
-            <p>—</p>
-          </div>
-          <div className="card">
-            <h3>e-Wallet Balance</h3>
-            <p>{walletBalance}</p>
+            <p>{loadingWallet ? '…' : walletBalance}</p>
           </div>
         </section>
 
         <section className="bottom-section">
           <div className="table-container">
             <h2>Tickets</h2>
-            <table className="tickets-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Ticket type</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {tickets.map(ticket => (
-                  <tr key={ticket.id}>
-                    <td>{ticket.date}</td>
-                    <td>{ticket.type}</td>
-                    <td className="arrow-cell">
-                      <button
-                        className="arrow-button"
-                        onClick={() => navigate(`/tickets/${ticket.id}`)}
-                        aria-label="View details"
-                      >
-                        →
-                      </button>
-                    </td>
+            {loadingTickets ? (
+              <div className="loading">Loading tickets…</div>
+            ) : (
+              <table className="tickets-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Ticket type</th>
+                    <th></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {tickets.map(({ id, date, type }) => (
+                    <tr key={id}>
+                      <td>{date}</td>
+                      <td>{type}</td>
+                      <td className="arrow-cell">
+                        <button
+                          className="arrow-button"
+                          onClick={() => navigate(`/tickets/${id}`)}
+                          aria-label="View details"
+                        >
+                          →
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
 
           <div className="image-container">
