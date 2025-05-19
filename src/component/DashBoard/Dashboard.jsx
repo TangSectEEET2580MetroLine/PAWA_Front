@@ -1,17 +1,22 @@
+// src/component/DashBoard/Dashboard.jsx
+
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import trainImage from './assets/train.jpg';
 
 const Dashboard = () => {
-  const ticketCount = 5;
-  const walletBalance = '₫50,000';
+  const navigate = useNavigate();
+
+  // Tạm thời giả lập dữ liệu
+  const ticketCount    = 5;
+  const walletBalance  = '₫50,000';
   const tickets = [
-    { date: '02/10/2025', type: 'Ben Thanh → Sai Gon Zoo' },
-    { date: '02/10/2025', type: 'Ben Si-anh → Tan Phu Station' },
-    { date: '02/10/2025', type: 'Ben Thanh → Sai Gon Terminal' },
-    { date: '01/26/2025', type: 'Binh Thai → Independence Palace' },
-    { date: '01/26/2025', type: '01/26/2025 → Cho Lai Station' }
+    { id: 0, date: '02/10/2025', type: 'Ben Thanh → Sai Gon Zoo' },
+    { id: 1, date: '02/10/2025', type: 'Ben Si-anh → Tan Phu Station' },
+    { id: 2, date: '02/10/2025', type: 'Ben Thanh → Sai Gon Terminal' },
+    { id: 3, date: '01/26/2025', type: 'Binh Thai → Independence Palace' },
+    { id: 4, date: '01/26/2025', type: '01/26/2025 → Cho Lai Station' },
   ];
 
   return (
@@ -19,13 +24,23 @@ const Dashboard = () => {
       <aside className="sidebar">
         <div className="sidebar-logo">HCMC Metro</div>
         <nav className="sidebar-nav">
-          <NavLink to="/dashboard" className="nav-item" activeclassname="active">Dashboard</NavLink>
-          <NavLink to="/lines" className="nav-item">Available Lines</NavLink>
-          <NavLink to="/purchase" className="nav-item">Purchase Ticket</NavLink>
-          <NavLink to="/history" className="nav-item">History</NavLink>
+          <NavLink to="/dashboard" className="nav-item" activeclassname="active">
+            Dashboard
+          </NavLink>
+          <NavLink to="/lines" className="nav-item">
+            Available Lines
+          </NavLink>
+          <NavLink to="/purchase" className="nav-item">
+            Purchase Ticket
+          </NavLink>
+          <NavLink to="/history" className="nav-item">
+            History
+          </NavLink>
         </nav>
         <div className="sidebar-footer">
-          <NavLink to="/settings" className="nav-item">Settings</NavLink>
+          <NavLink to="/settings" className="nav-item">
+            Settings
+          </NavLink>
         </div>
       </aside>
 
@@ -47,11 +62,11 @@ const Dashboard = () => {
             <p>{ticketCount}</p>
           </div>
           <div className="card">
-            <h3>e‑Wallet Balance</h3>
+            <h3>e-Wallet Balance</h3>
             <p>—</p>
           </div>
           <div className="card">
-            <h3>e‑Wallet Balance</h3>
+            <h3>e-Wallet Balance</h3>
             <p>{walletBalance}</p>
           </div>
         </section>
@@ -68,11 +83,19 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {tickets.map((t, i) => (
-                  <tr key={i}>
-                    <td>{t.date}</td>
-                    <td>{t.type}</td>
-                    <td className="arrow">→</td>
+                {tickets.map(ticket => (
+                  <tr key={ticket.id}>
+                    <td>{ticket.date}</td>
+                    <td>{ticket.type}</td>
+                    <td className="arrow-cell">
+                      <button
+                        className="arrow-button"
+                        onClick={() => navigate(`/tickets/${ticket.id}`)}
+                        aria-label="View details"
+                      >
+                        →
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

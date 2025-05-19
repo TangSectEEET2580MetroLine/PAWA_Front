@@ -8,7 +8,7 @@
 /* Sidebar */
 .sidebar {
   width: 240px;
-  background: #0D4F58;
+  background: #106066;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -143,6 +143,21 @@
   font-size: 1.25rem;
   color: #6b7280;
 }
+
+.arrow-cell {
+  text-align: center;
+}
+.arrow-button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+.arrow-button:hover {
+  color: #374151;
+}
+
 
 .image-container {
   flex: 1;
