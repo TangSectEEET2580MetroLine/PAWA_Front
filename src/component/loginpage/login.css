@@ -1,4 +1,4 @@
-/* Reset cơ bản */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,7 +11,7 @@ body, html {
   background: #f5f6f8;
 }
 
-/* Container chính căn giữa màn hình */
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -20,7 +20,7 @@ body, html {
   padding: 1rem;
 }
 
-/* Card trắng */
+
 .login-card {
   background: #ffffff;
   border-radius: 12px;
@@ -31,7 +31,7 @@ body, html {
   text-align: center;
 }
 
-/* Logo trên cùng */
+
 .login-logo {
   display: flex;
   align-items: center;
@@ -59,7 +59,6 @@ body, html {
   color: #002f4b;
 }
 
-/* Tiêu đề Log In */
 .login-title {
   margin-bottom: 1.5rem;
   color: #002f4b;

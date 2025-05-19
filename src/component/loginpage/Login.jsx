@@ -1,10 +1,10 @@
 // src/components/Login.jsx
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { loginRequest, googleSignInRequest } from '../../http_call/HttpRequest';
-import { HOST_URL_GG_LOGIN } from '../../service_url/AppUrlConfig';   
-import './Login.css';
+import { HOST_URL_GG_LOGIN } from '../../service_url/AppUrlConfig'; 
+import './login.css';
 import { ReactComponent as GoogleIcon } from './assets/google-icon.svg'; 
 
 const Login = () => {
@@ -28,7 +28,7 @@ const Login = () => {
       }
 
       // after Login, go to main page
-      navigate('/menu');
+      navigate('/dashboard');
     } catch (err) {
       console.error(err);
       if (err.response?.status === 400) {
@@ -42,7 +42,7 @@ const Login = () => {
     const handleGoogle = () => {
         // full-page redirect to Spring's authorization endpoint
         window.location.href = HOST_URL_GG_LOGIN;
-    };
+  };
 
   return (
     <div className="login-container">
@@ -53,7 +53,6 @@ const Login = () => {
           <span className="logo-text">HCMC Metro</span>
         </div>
 
-        {/* Tiêu đề */}
         <h2 className="login-title">Log In</h2>
 
         {/* Form */}
@@ -105,7 +104,7 @@ const Login = () => {
 
         {/* Sign up link */}
         <div className="login-signup">
-          Don’t have an account? <a href="/signup">Sign up</a>
+          Don’t have an account? <Link to="/signup">Sign up</Link>
         </div>
       </div>
     </div>
