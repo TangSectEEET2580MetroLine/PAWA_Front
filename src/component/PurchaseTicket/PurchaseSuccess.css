@@ -1,0 +1,55 @@
+/* src/components/PurchaseSuccess/PurchaseSuccess.css */
+
+.success-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 80vh;
+  background-color: #f7fafc;
+}
+
+.success-card {
+  background: #fff;
+  padding: 2rem 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  text-align: center;
+  max-width: 400px;
+}
+
+.success-title {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #2c7a7b;
+}
+
+.success-text {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: #1f2d3d;
+}
+
+.btn-primary {
+  background-color: #2c7a7b;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: #256363;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: #2c7a7b;
+  margin-top: 0.75rem;
+  text-decoration: underline;
+  cursor: pointer;
+}

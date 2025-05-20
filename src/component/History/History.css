@@ -1,0 +1,127 @@
+/* History.css */
+
+.history-page {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sidebar {
+  width: 240px;
+  background: #055659;
+  color: #fff;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+}
+
+.logo {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar nav li {
+  padding: 0.75rem 0;
+  cursor: pointer;
+}
+
+.sidebar nav li.active {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+.content {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 2rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.header h1 {
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+}
+
+.records {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.record-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stations {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.station .label {
+  display: block;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.station .value {
+  font-size: 1rem;
+}
+
+.arrow {
+  font-size: 1.25rem;
+  color: #999;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.details .label {
+  display: block;
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.details .value {
+  font-size: 0.875rem;
+}
+
+.details .status {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #888;
+}
+
+.details .price {
+  font-weight: 600;
+}
+
+.dates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dates .label {
+  display: block;
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.dates .value {
+  font-size: 0.875rem;
+}

@@ -10,11 +10,11 @@ import trainImage                    from './assets/train.jpg';
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // Tickets state
+  // --- Tickets state
   const [tickets, setTickets]               = useState([]);
   const [loadingTickets, setLoadingTickets] = useState(true);
 
-  // Wallet state
+  // --- Wallet state
   const [walletBalance, setWalletBalance]   = useState('—');
   const [loadingWallet, setLoadingWallet]   = useState(true);
 
@@ -34,46 +34,47 @@ const Dashboard = () => {
       .finally(() => setLoadingTickets(false));
   }, []);
 
+  // 2) Load wallet by userId extracted from JWT
   useEffect(() => {
-  const token = localStorage.getItem('authToken');
-  if (!token) {
-    console.warn('No authToken in localStorage');
-    setLoadingWallet(false);
-    return;
-  }
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      console.warn('No authToken in localStorage');
+      setLoadingWallet(false);
+      return;
+    }
 
-  let payload;
-  try {
-    payload = jwtDecode(token);
-    console.log('Decoded JWT payload:', payload);
-  } catch (err) {
-    console.error('Failed to decode JWT', err);
-    setLoadingWallet(false);
-    return;
-  }
+    let payload;
+    try {
+      payload = jwtDecode(token);
+      console.log('Decoded JWT payload:', payload);
+    } catch (err) {
+      console.error('Failed to decode JWT', err);
+      setLoadingWallet(false);
+      return;
+    }
 
-  // Try every possible claim name:
-  const userId = payload.userId || payload.sub || payload.id || payload.user?.id;
-  console.log('Dashboard will fetch wallet for userId=', userId);
+    // Try all plausible claim names
+    const userId = payload.userId || payload.sub || payload.id || payload.user?.id;
+    console.log('Dashboard will fetch wallet for userId=', userId);
 
-  if (!userId) {
-    console.warn('No userId claim found in token');
-    setLoadingWallet(false);
-    return;
-  }
+    if (!userId) {
+      console.warn('No userId claim found in token');
+      setLoadingWallet(false);
+      return;
+    }
 
-  getWallet(userId)
-    .then(res => {
-      console.log('Wallet API response:', res);
-      const { balance } = res.data;
-      setWalletBalance(`₫${balance.toLocaleString()}`);
-    })
-    .catch(err => {
-      console.error('Failed to load wallet', err);
-      setWalletBalance('—');
-    })
-    .finally(() => setLoadingWallet(false));
-}, []);
+    getWallet(userId)
+      .then(res => {
+        console.log('Wallet API response:', res.data);
+        const { balance } = res.data;
+        setWalletBalance(`₫${balance.toLocaleString()}`);
+      })
+      .catch(err => {
+        console.error('Failed to load wallet', err);
+        setWalletBalance('—');
+      })
+      .finally(() => setLoadingWallet(false));
+  }, []);
 
   const ticketCount = tickets.length;
 
